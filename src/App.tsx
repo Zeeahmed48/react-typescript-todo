@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC, useState, ChangeEvent } from "react";
+import TodoList from "./Components/TodoList";
 
-function App() {
+const App: FC = () => {
+  const [todo, setTodo] = useState<string>("");
+  const [todoList, setTodoList] = useState<string[]>([]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setTodo(e.target.value);
+  };
+
+  const addTodo = (): void => {
+    if (!todo) {
+      return;
+    }
+    setTodoList([...todoList, todo]);
+    setTodo("");
+  };
+
+  const deleteTodo = (taskNametoDelete: string): void => {
+    setTodoList(todoList.filter((task) => task !== taskNametoDelete));
+    setTodo("");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="todo_lists">
+        <h1>Todo List</h1>
+        <div className="input_wrapper">
+          <input type="text" onChange={handleChange} value={todo} />
+          <button onClick={addTodo}>Add todo</button>
+        </div>
+        <TodoList todoList={todoList} deleteAction={deleteTodo} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
